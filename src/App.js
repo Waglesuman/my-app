@@ -12,43 +12,65 @@ function truncate(text, maxLength) {
 }
 
 function BlogPosts() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [posts, setPosts] = useState([]);
-  
-  /* A React Hook that is used to fetch data from the WordPress API. */
+
   useEffect(() => {
-    axios.get('http://colormag.local/wp-json/wp/v2/posts?per_page=10')
+    axios.get(`http://colormag.local/wp-json/wp/v2/posts?page=${currentPage}&per_page=5`)
       .then(response => {
         setPosts(response.data);
+        setTotalPages(parseInt(response.headers['x-wp-totalpages']));
       })
       .catch(error => {
         console.log(error);
       });
-  }, []);
+  }, [currentPage]);
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
   return (
     <div className='container mt-2'>
       <h1>Latest Blog Posts</h1>
-     {/* A JavaScript function that is used to loop through the posts array and display the data.  */}
       {posts.map(post => (
         <div key={post.id} className='card border-dark mt-3 mb-3'>
-
-        {/* Header or Title */}
-        <div className='card-header' >
-          <h2>{post.title.rendered}</h2>
+          <div className='card-header' >
+            <h2>{post.title.rendered}</h2>
           </div>
-          {/* Body */}
           <div className='card-body'>
           {/* <div dangerouslySetInnerHTML={{ __html: post.content.rendered }} /> */}
           <p dangerouslySetInnerHTML={{ __html: truncate(post.content.rendered, 100)}} />
+            {/* <p dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }} /> */}
           </div>
-
-          {/* Footer */}
           <div className='card-footer'> 
-          <Moment fromNow> {post.date} </Moment>
-          <div className='btn btn-success float-end'>Read more...</div>
+            <Moment fromNow>{post.date}</Moment>
+            {/* <a href={post.link} className='btn btn-success float-right'>Read more...</a> */}
           </div>
         </div>
       ))}
+      <nav>
+        <ul className='pagination'>
+          <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+            <button className='page-link' onClick={handlePrevPage}>&laquo; Previous</button>
+          </li>
+          <li className='page-item disabled'>
+            <span className='page-link'>{currentPage} of {totalPages}</span>
+          </li>
+          <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+            <button className='page-link' onClick={handleNextPage}>Next &raquo;</button>
+          </li>
+        </ul>
+      </nav>
     </div>
   );
 }
