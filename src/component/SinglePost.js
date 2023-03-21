@@ -6,21 +6,21 @@ import { useParams } from 'react-router-dom';
 
 function SinglePost() {
   const [post, setPost] = useState(null);
-  const { postId } = useParams();
+  const { Id } = useParams();
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        console.log(`Fetching post with postId ${postId}...`);
+        console.log(`Fetching post with postId ${Id}...`);
         const wordPressSiteUrl = 'http://colormag.local/';
-        const response = await axios.get(`${wordPressSiteUrl}wp-json/wp/v2/posts/${postId}`);
+        const response = await axios.get(`${wordPressSiteUrl}wp-json/wp/v2/posts/${Id}`);
         setPost(response.data);
       } catch (error) {
         console.log(error);
       }
     };
     fetchPost();
-  }, [postId]);
+  }, [Id]);
 
   if (!post) {
     throw new Error("Post not found");

@@ -9,7 +9,7 @@ function Apps() {
   return (
     <BrowserRouter>
       <Routes>
-      <Route path="/posts/:postId" component={SinglePostWithErrorBoundary}  element={<SinglePost />} ></Route>
+      <Route path="/post/:postId" component={SinglePostWithErrorBoundary}  element={<SinglePost />} ></Route>
         <Route path="/" element={<BlogPosts />}>
         </Route>
       </Routes>
