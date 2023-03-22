@@ -5,6 +5,10 @@ import { Link } from 'react-router-dom';
 
 import truncate from "./excerpt";
 
+function handleClick(postId) {
+  console.log(postId);
+}
+
 function BlogPosts() {
 /* Setting the state of the component. */
   const [currentPage, setCurrentPage] = useState(1);
@@ -79,7 +83,7 @@ function BlogPosts() {
             <div className='card-footer'>
               <Moment fromNow>{post.date}</Moment>
               {/* <a href={`localhost:3000/post/${post.id}`} className='btn btn-success float-right'>Read more...</a> */}
-              <Link to={`/post/${post.id}`} className='btn btn-success float-end'>Read more...</Link>
+              <Link to={`/post/${post.id}`} className='btn btn-success float-end' onClick={() => handleClick(post.id)}>Read more...</Link>
             </div>
           </div>
         ))}
