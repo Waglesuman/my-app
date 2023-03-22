@@ -6,43 +6,58 @@ import { Link } from 'react-router-dom';
 import truncate from "./excerpt";
 
 function BlogPosts() {
+/* Setting the state of the component. */
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [posts, setPosts] = useState([]);
 
+  /* A hook that is called when the component is mounted and when the currentPage is changed. */
   useEffect(() => {
     const wordPressSiteUrl = 'http://colormag.local/';
+/* Making a request to the WordPress REST API to get the posts. */
     axios.get(`${wordPressSiteUrl}wp-json/wp/v2/posts?page=${currentPage}&per_page=6`)
       .then(response => {
         setPosts(response.data);
         setTotalPages(parseInt(response.headers['x-wp-totalpages']));
       })
+     /* Catching any errors that may occur. */
       .catch(error => {
         console.log(error);
       });
   }, [currentPage]);
 
+  /**
+   * If the current page is greater than 1, then set the current page to the current page minus 1.
+   */
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
   };
 
+  /**
+   * If the current page is less than the total number of pages, then increment the current page by
+   * one.
+   */
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
     }
   };
 
+/* Returning the HTML code for the component. */
   return (
     <div className='container mt-2'>
       <div className='row' >
         <h1>Latest Blog Posts</h1>
+        {/*  Mapping through the posts array and returning the HTML code for each post.  */}
         {posts.map(post => (
           <div key={post.id} className='card border-dark mt-3 mb-3 m-3 col-3 '>
             <div className='card-header' >
+              {/*  Creating a link to the post. */}
               <Link to={`/post/${post.id}`}><h4>{post.title.rendered}</h4></Link>
             </div>
+            {/* Body */}
             <div className='card-body'>
               {post.featured_src ? (
                 <img
@@ -64,11 +79,11 @@ function BlogPosts() {
             <div className='card-footer'>
               <Moment fromNow>{post.date}</Moment>
               {/* <a href={`localhost:3000/post/${post.id}`} className='btn btn-success float-right'>Read more...</a> */}
-              <Link to={`/post/${post.id}`} className='btn btn-success float-end'> Read more...
-              </Link>
+              <Link to={`/post/${post.id}`} className='btn btn-success float-end'>Read more...</Link>
             </div>
           </div>
         ))}
+        { /* The pagination. */ }
         <nav>
           <ul className='pagination'>
             <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
