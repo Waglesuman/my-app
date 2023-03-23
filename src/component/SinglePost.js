@@ -1,99 +1,101 @@
-// import { useState, useEffect } from "react";
-// import axios from "axios";
-
-// function SinglePost({ postId }) {
-//   console.log(postId);
-//   const [post, setPost] = useState(null);
-//   const [error, setError] = useState(null);
-
-//   useEffect(() => {
-//     async function fetchPost() {
-//       try {
-//         const response = await axios.get(`/wp-json/wp/v2/posts/151`);
-//         setPost(response.data);
-//       } catch (error) {
-//         setError(error);
-//       }
-//     }
-
-//     if (postId) {
-//       fetchPost();
-//     }
-//   }, [postId]);
-
-//   if (error) {
-//     return <div>Error: {error.message}</div>;
-//   }
-
-//   if (!post) {
-//     return <div>Loading...</div>;
-//   }
-
-//   return (
-//     <div>
-//       <h2>{post.title.rendered}</h2>
-//       <div dangerouslySetInnerHTML={{ __html: post.content.rendered }} />
-//     </div>
-//   );
-// }
-
-// export default SinglePost;
-
-import { useState, useEffect } from 'react';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Moment from 'react-moment';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import Comment from './Comment';
+import Navbar from './Navbar';
 
 function SinglePost() {
   const [post, setPost] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(null);
+
   const { postId } = useParams();
-  console.log(`Fetching postId ${postId}...`);
-  
 
   useEffect(() => {
+    // const fetchPost = async () => {
+    //   try {
+    //     const wordPressSiteUrl = 'http://colormag.local/';
+    //     const response = await axios.get(`${wordPressSiteUrl}wp-json/wp/v2/posts/${postId}`);
+    //     setPost(response.data);
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // };
+
     const fetchPost = async () => {
       try {
-        console.log(`Fetching post with postId ${postId}...`);
         const wordPressSiteUrl = 'http://colormag.local/';
-        const response = await axios.get(`${wordPressSiteUrl}wp-json/wp/v2/posts/${postId}`);
+        const response = await axios.get(`${wordPressSiteUrl}wp-json/wp/v2/posts/${postId}?_embed`);
         setPost(response.data);
       } catch (error) {
-        if (error.isAxiosError) {
-          console.log(error.response.status); // 404
-          console.log(error.response.data); // { message: 'Data not found' }
-          // Display an error message to the user
-        } else {
-          console.log(error.message); // Network Error
-          // Display a generic error message to the user
-        }
+        console.error(error);
       }
     };
-    console.log(`postId: ${postId}`);
+
+    const fetchPosts = async () => {
+      try {
+        const wordPressSiteUrl = 'http://colormag.local/';
+        const response = await axios.get(`${wordPressSiteUrl}wp-json/wp/v2/posts`);
+        setPosts(response.data);
+        setCurrentIndex(response.data.findIndex(p => p.id === parseInt(postId)));
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
     fetchPost();
+    fetchPosts();
   }, [postId]);
 
-  // if (!post) {
-  //   throw new Error("Post not found");
-  // }
-  
+  const prevPostIndex = currentIndex > 0 ? currentIndex - 1 : null;
+  const nextPostIndex = currentIndex < posts.length - 1 ? currentIndex + 1 : null;
+
   return (
-    <div className='container mt-2'>
-      <div className='row'>
-        <div className='col-12'>
-          {post ? (
-            <>
-              <h1>{post.title.rendered}</h1>
-              <Moment fromNow>{post.date}</Moment>
-              <div dangerouslySetInnerHTML={{ __html: post.content.rendered }} />
-            </>
-          ) : (
-            <div>Loading...</div>
-          )}
+    <>
+      <Navbar />
+      <div className="container mt-5 bg-light">
+        <div className="row">
+          <div className="col-12">
+            {post ? (
+              <>
+                <h1 className="mx-4 mb-4 mt-3 text-center text-dark" style={{ backgroundColor: '#bcc6dd' }}>{post.title.rendered}</h1>
+                <p className="mx-4">
+                  <small className="text-muted">
+                    <Moment fromNow>{post.date}</Moment>
+                  </small>
+                </p>
+                {post._embedded && post._embedded['wp:featuredmedia'] && post._embedded['wp:featuredmedia'][0].source_url && (
+                  <img src={post._embedded['wp:featuredmedia'][0].source_url} alt={post.title.rendered} style={{ width: '100%' }} />
+                )}
+                <div className="mx-4" dangerouslySetInnerHTML={{ __html: post.content.rendered }} />
+
+                <Comment />
+                <div className="mx-4 mt-4 ">
+                  <div className='float-start'>
+                    {prevPostIndex !== null && (
+                      <Link to={`/post/${posts[prevPostIndex].id}`} className="btn btn-primary mr-2">
+                        &laquo; Previous
+                      </Link>
+
+                    )}
+                  </div>
+                  <div className='float-end'>
+                    {nextPostIndex !== null && (
+                      <Link to={`/post/${posts[nextPostIndex].id}`} className="btn btn-primary">
+                        Next &raquo;
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className='mx-4'>Loading...</div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

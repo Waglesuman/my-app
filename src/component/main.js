@@ -4,10 +4,7 @@ import Moment from 'react-moment';
 import { Link } from 'react-router-dom';
 
 import truncate from "./excerpt";
-
-function handleClick(postId) {
-  console.log(postId);
-}
+import Navbar from './Navbar';
 
 function BlogPosts() {
 /* Setting the state of the component. */
@@ -51,7 +48,9 @@ function BlogPosts() {
 
 /* Returning the HTML code for the component. */
   return (
-    <div className='container mt-2'>
+    <>
+    <Navbar />
+    <div className='container mt-5'>
       <div className='row' >
         <h1>Latest Blog Posts</h1>
         {/*  Mapping through the posts array and returning the HTML code for each post.  */}
@@ -83,7 +82,7 @@ function BlogPosts() {
             <div className='card-footer'>
               <Moment fromNow>{post.date}</Moment>
               {/* <a href={`localhost:3000/post/${post.id}`} className='btn btn-success float-right'>Read more...</a> */}
-              <Link to={`/post/${post.id}`} className='btn btn-success float-end' onClick={() => handleClick(post.id)}>Read more...</Link>
+              <Link to={`/post/${post.id}`} className='btn btn-success float-end' >Read more...</Link>
             </div>
           </div>
         ))}
@@ -103,6 +102,7 @@ function BlogPosts() {
         </nav>
       </div>
     </div>
+    </>
   );
 }
 export default BlogPosts;

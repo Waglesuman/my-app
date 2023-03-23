@@ -1,11 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React from "react";
-import {createRoot} from "react-dom/client";
 import BlogPosts from "./component/main";
 import SinglePost from "./component/SinglePost";
 import SinglePostWithErrorBoundary from "./component/SinglePost";
-import { useParams } from 'react-router-dom';
-
+import Login from "./component/login/AppLogin";
+import Dashboard from "./component/login/Dashboard";
 
 function Apps() {
   return (
@@ -17,6 +16,8 @@ function Apps() {
           element={<SinglePostWrapper />}
         />
         <Route path="/" element={<BlogPosts />} />
+        <Route path="/AppLogin" element={<Login />} />
+        <Route path="/Dashboard" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
   );
@@ -24,12 +25,5 @@ function Apps() {
 export default Apps;
 
 function SinglePostWrapper() {
-  const { postId } = useParams();
-  return <SinglePost key={postId} />;
+  return <SinglePost />;
 }
-
-createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <Apps />
-  </React.StrictMode>
-);
