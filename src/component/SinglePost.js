@@ -4,6 +4,8 @@ import Moment from 'react-moment';
 import { Link, useParams } from 'react-router-dom';
 import Comment from './Comment';
 import Navbar from './Navbar';
+import CreateComment from './CreateComment';
+
 
 function SinglePost() {
   const [post, setPost] = useState(null);
@@ -71,6 +73,7 @@ function SinglePost() {
                 <div className="mx-4" dangerouslySetInnerHTML={{ __html: post.content.rendered }} />
 
                 <Comment />
+                <CreateComment postId={post.id} />
                 <div className="mx-4 mt-4 ">
                   <div className='float-start'>
                     {prevPostIndex !== null && (

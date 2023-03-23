@@ -5,6 +5,7 @@ import SinglePost from "./component/SinglePost";
 import SinglePostWithErrorBoundary from "./component/SinglePost";
 import Login from "./component/login/AppLogin";
 import Dashboard from "./component/login/Dashboard";
+import LogOut from "./component/LogOut/LogOut";
 
 function Apps() {
   return (
@@ -18,6 +19,7 @@ function Apps() {
         <Route path="/" element={<BlogPosts />} />
         <Route path="/AppLogin" element={<Login />} />
         <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/LogOut" element={<LogOut />} />
       </Routes>
     </BrowserRouter>
   );

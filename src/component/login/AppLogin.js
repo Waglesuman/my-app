@@ -6,6 +6,9 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Navbar from "../Navbar";
 
+//formik use to pass form value and validation
+//yup use for authorization and authentication.
+
 const AppLogin = () => {
   const navigate = useNavigate();
   const [authenticated, setauthenticated] = useState(
@@ -31,10 +34,14 @@ const AppLogin = () => {
         .then((res) => {
           console.log("response", res);
           if (res.status === 200 && res.statusText === "OK") {
-            setauthenticated(true);
+            const { user_nicename , user_email } = res.data;
+            localStorage.setItem("userEmail", user_email);
             sessionStorage.setItem("authenticated", true);
-            alert("Welcome " + res.data.user_nicename);
+            setauthenticated(true);
+            alert("Welcome " + res.data.user_email);
             navigate("/Dashboard");
+            
+            
           }
         })
         .catch((err) => {
@@ -46,37 +53,47 @@ const AppLogin = () => {
   return (
     <>
     <Navbar />
-      <div className="col-3 mt-5 container">
-        <h1>Login Page</h1>
-        <form onSubmit={formik.handleSubmit}>
-          <label htmlFor="usernameOrEmail">Username or Email</label>
-          <input
-            id="usernameOrEmail"
-            name="usernameOrEmail"
-            type="text"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.usernameOrEmail}
-          />
-          {formik.touched.usernameOrEmail && formik.errors.usernameOrEmail ? (
-            <div>{formik.errors.usernameOrEmail}</div>
-          ) : null}
-          <br />
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.password}
-          />
-          {formik.touched.password && formik.errors.password ? (
-            <div>{formik.errors.password}</div>
-          ) : null}
-          <button type="submit">Submit</button>
-        </form>
-      </div>
+    <div className="col-12 col-md-6 col-lg-4 container mt-5">
+  <h1 className="mb-4">Login Page</h1>
+  <form onSubmit={formik.handleSubmit}>
+    <div className="form-group">
+      <label htmlFor="usernameOrEmail">Username or Email</label>
+      <input
+        id="usernameOrEmail"
+        name="usernameOrEmail"
+        type="text"
+        className={`form-control ${
+          formik.touched.usernameOrEmail && formik.errors.usernameOrEmail ? 'is-invalid' : ''
+        }`}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        value={formik.values.usernameOrEmail}
+      />
+      {formik.touched.usernameOrEmail && formik.errors.usernameOrEmail ? (
+        <div className="invalid-feedback">{formik.errors.usernameOrEmail}</div>
+      ) : null}
+    </div>
+    <div className="form-group">
+      <label htmlFor="password">Password</label>
+      <input
+        id="password"
+        name="password"
+        type="password"
+        className={`form-control ${
+          formik.touched.password && formik.errors.password ? 'is-invalid' : ''
+        }`}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        value={formik.values.password}
+      />
+      {formik.touched.password && formik.errors.password ? (
+        <div className="invalid-feedback">{formik.errors.password}</div>
+      ) : null}
+    </div>
+    <button type="submit" className="btn btn-primary mt-3">Submit</button>
+  </form>
+</div>
+
     </>
   );
 };

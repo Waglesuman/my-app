@@ -4,6 +4,7 @@ import houseIcon from "../assets/img/house-door-fill.svg";
 
 const Navbar = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const loggedInUser = sessionStorage.getItem("authenticated");
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentTime(new Date());
@@ -40,9 +41,18 @@ const Navbar = () => {
       <div className="navbar-item text-white" >
           {currentDate} - {currentTimeString}
         </div>
-        <Link to="/AppLogin" className="navbar-item mx-3 text-white">
+        {!loggedInUser ? (
+          
+            <Link to="/AppLogin" className="navbar-item mx-3 text-white">Login</Link>
+            
+        ) : (
+          
+            <Link to="/LogOut" className="navbar-item mx-3 text-white">Logout</Link>
+            
+        )}
+        {/* <Link to="/AppLogin" className="navbar-item mx-3 text-white">
         Login 
-          </Link> 
+          </Link>  */}
     </div>
   </div>
 </nav>

@@ -50,11 +50,11 @@ const CreatePost = () => {
 	};
 
 	useEffect(() => {
-		const userID = localStorage.getItem('userID');
-		const token = localStorage.getItem('token');
-		setUserID(userID);
-		setToken(token);
-	}, []);
+    const userId = localStorage.getItem('userID');
+    const token = localStorage.getItem('token');
+    setserId(userId);
+    setToken(token);
+  }, []);
 
 
 	return (
@@ -73,11 +73,10 @@ const CreatePost = () => {
         <label htmlFor="content">Content</label>
         <textarea name="content" className="form-control" onChange={handleInputChange} id="content" rows="3"/>
       </div>
-
-      <button type="submit" className="btn btn-secondary">Submit</button>
+      <button type="submit" className="btn btn-success">Submit</button>
     </fieldset>
   </form>
-
+</>
 	);
 }
 

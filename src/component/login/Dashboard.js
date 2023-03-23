@@ -10,11 +10,11 @@ const Dashboard = () => {
     sessionStorage.getItem("authenticated") || false
   );
 
-  const handleLogout = () => {
-    setAuthenticated(false);
-    sessionStorage.removeItem("authenticated");
-    navigate("/AppLogin");
-  };
+  // const handleLogout = () => {
+  //   setAuthenticated(false);
+  //   sessionStorage.removeItem("authenticated");
+  //   navigate("/AppLogin");
+  // };
 
  
 
@@ -116,7 +116,8 @@ const Dashboard = () => {
 		</form>
       {/* <CreatePost /> */}
       <p>This is the logged in dashboard</p>
-      <div className="btn btn-primary" onClick={handleLogout}>Logout</div>
+      
+      {/* <div className="btn btn-primary" onClick={handleLogout}>Logout</div> */}
     </div>
     </>
   );
