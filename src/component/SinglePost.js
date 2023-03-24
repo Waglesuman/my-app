@@ -5,6 +5,8 @@ import { Link, useParams } from 'react-router-dom';
 import Comment from './Comment';
 import Navbar from './Navbar';
 import CreateComment from './CreateComment';
+import { useNavigate } from "react-router-dom";
+
 
 
 function SinglePost() {
@@ -13,7 +15,27 @@ function SinglePost() {
   const [currentIndex, setCurrentIndex] = useState(null);
 
   const { postId } = useParams();
-
+ /* This is a check to see if the user is authenticated. If not, it will redirect them to the login
+	page. */
+  const navigate = useNavigate();
+  const [authenticated, setAuthenticated] = useState(
+    sessionStorage.getItem("authenticated") || false
+  );
+  const handleDelete = async () => {
+    try {
+      const authToken = localStorage.getItem('token');
+      const wordPressSiteUrl = 'http://colormag.local/';
+      await axios.delete(`${wordPressSiteUrl}wp-json/wp/v2/posts/${postId}`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      // Redirect to homepage after successful deletion
+      window.location.href = '/';
+    } catch (error) {
+      console.error(error);
+    }
+  };
   useEffect(() => {
     // const fetchPost = async () => {
     //   try {
@@ -52,6 +74,13 @@ function SinglePost() {
 
   const prevPostIndex = currentIndex > 0 ? currentIndex - 1 : null;
   const nextPostIndex = currentIndex < posts.length - 1 ? currentIndex + 1 : null;
+   /* This is a check to see if the user is authenticated. If not, it will redirect them to the login
+ page. */
+ if (!authenticated) {
+  navigate("/AppLogin");
+  return null;
+}
+
 
   return (
     <>
@@ -74,6 +103,11 @@ function SinglePost() {
 
                 <Comment />
                 <CreateComment postId={post.id} />
+                <div className="mx-4 mt-4">
+        <button onClick={handleDelete} className="btn btn-danger ">
+          Delete This Post
+        </button>
+      </div>
                 <div className="mx-4 mt-4 ">
                   <div className='float-start'>
                     {prevPostIndex !== null && (

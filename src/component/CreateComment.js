@@ -63,7 +63,7 @@ const CreateComment = ({ postId }) => {
           <label htmlFor="comment">Comment</label>
           <textarea name="comment" className="form-control" onChange={handleInputChange} id="comment" rows="3" value={comment}/>
         </div>
-        <button type="submit" className="btn btn-success">Submit</button>
+        <button type="submit" className="btn btn-success">Comment</button>
       </fieldset>
     </form>
   );

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Moment from 'react-moment';
+import { useNavigate } from "react-router-dom";
+
 import { Link } from 'react-router-dom';
 
 import truncate from "./excerpt";
@@ -11,6 +13,11 @@ function BlogPosts() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [posts, setPosts] = useState([]);
+  /* Checking if the user is logged in. If not, it redirects to the login page. */
+  const navigate = useNavigate();
+  const [authenticated, setAuthenticated] = useState(
+    sessionStorage.getItem("authenticated") || false
+  );
 
   /* A hook that is called when the component is mounted and when the currentPage is changed. */
   useEffect(() => {
@@ -46,6 +53,11 @@ function BlogPosts() {
     }
   };
 
+ /* Checking if the user is logged in. If not, it redirects to the login page. */
+  if (!authenticated) {
+    navigate("/AppLogin");
+    return null;
+  }
 /* Returning the HTML code for the component. */
   return (
     <>
