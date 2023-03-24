@@ -76,6 +76,7 @@ function SinglePost() {
   const nextPostIndex = currentIndex < posts.length - 1 ? currentIndex + 1 : null;
    /* This is a check to see if the user is authenticated. If not, it will redirect them to the login
  page. */
+ 
  if (!authenticated) {
   navigate("/AppLogin");
   return null;
@@ -152,6 +153,8 @@ function ErrorBoundary(props) {
     return <ErrorFallback />;
   }
 
+ /* Cloning the children of the ErrorBoundary component and passing the handleCatch function to the
+ componentDidCatch prop. */
   return (
     <React.Fragment>
       {React.cloneElement(props.children, { componentDidCatch: handleCatch })}
