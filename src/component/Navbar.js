@@ -3,18 +3,24 @@ import { Link } from "react-router-dom";
 import houseIcon from "../assets/img/house-door-fill.svg";
 
 const Navbar = () => {
+/* A hook that is used to update the time every second. */
   const [currentTime, setCurrentTime] = useState(new Date());
+/* Checking if the user is logged in or not. */
   const loggedInUser = sessionStorage.getItem("authenticated");
+
+ /* A hook that is used to update the time every second. */
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
 
+   /* A cleanup function that is called when the component is unmounted. */
     return () => {
       clearInterval(intervalId);
     };
   }, []);
 
+/* Used to get the current date and time. */
   const currentDate = currentTime.toLocaleDateString();
   const currentTimeString = currentTime.toLocaleTimeString();
 
@@ -26,13 +32,12 @@ const Navbar = () => {
   <Link to="/" className="navbar-item">
             <img src={houseIcon} alt="home" style={{ width: "30px", height: "30px" }} />
           </Link>
-    {/* <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button> */}
+
+  {/*  A ternary operator. It is used to check if the user is logged in or not. If the user is logged in,
+  then the user will see the navbar items. If the user is not logged in, then the user will not see
+  the navbar items. */ }
     {!loggedInUser ? (
           ""
-     
-          
       ) : (
         
         <div class="collapse navbar-collapse  text-center" id="navbarText">
@@ -56,27 +61,12 @@ const Navbar = () => {
       </div>
           
       )}
-    {/* <div class="collapse navbar-collapse  text-center" id="navbarText">
-      <ul class="navbar-nav  me-auto mb-2 mb-lg-0">
-        <li class="nav-item ">
-        <Link to="/" className="navbar-item mx-3 text-white">
-         Colormag
-          </Link>
-        </li>
-        <li class="nav-item ">
-        <Link to="/Dashboard" className="navbar-item mx-3 text-white">
-         Create a Post 
-          </Link>
-        </li>
-        <li class="nav-item ">
-        <Link to="/" className="navbar-item mx-3 text-white">
-         All post
-          </Link>
-        </li>
-      </ul> */}
       <div className="navbar-item text-white" >
           {currentDate} - {currentTimeString}
         </div>
+       {/* /* A ternary operator. It is used to check if the user is logged in or not. If the user is
+       logged in,
+         then the user will logout button and vice-versa  */ }
         {!loggedInUser ? (
           
             <Link to="/AppLogin" className="navbar-item mx-3 text-white">Login</Link>
@@ -86,11 +76,7 @@ const Navbar = () => {
             <Link to="/LogOut" className="navbar-item mx-3 text-white">Logout</Link>
             
         )}
-        {/* <Link to="/AppLogin" className="navbar-item mx-3 text-white">
-        Login 
-          </Link>  */}
     </div>
-  {/* </div> */}
 </nav>
 
 

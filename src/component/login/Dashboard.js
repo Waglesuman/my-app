@@ -11,6 +11,7 @@ const Dashboard = () => {
     sessionStorage.getItem("authenticated") || false
   );
 
+ /* This is the state of the component. */
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [userID, setUserID] = useState("");
@@ -22,6 +23,12 @@ const Dashboard = () => {
 
   const createMarkup = (data) => ({ __html: data });
 
+/**
+ * If the name of the input is title, set the title state to the value of the input, otherwise set the
+ * content state to the value of the input.
+ * @param event - The event object is a JavaScript event that is sent to an element when an event
+ * occurs on the element.
+ */
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     name === "title" ? setTitle(value) : setContent(value);
@@ -31,6 +38,12 @@ const Dashboard = () => {
     setMedia(event.target.files[0]);
   };
 
+/**
+ * It takes the form data, sends it to the WordPress site, and then sets the loading state to false,
+ * sets the postCreated state to true if the post was created, and sets the message state to the
+ * response data message.
+ * @param event - The event object that is passed to the function.
+ */
   const handleFormSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
@@ -44,7 +57,9 @@ const Dashboard = () => {
       formData.append("file", media);
     }
 
+/* The URL of the WordPress site. */
     const wordPressSiteUrl = "http://colormag.local";
+/* Getting the token from local storage. */
     const authToken = localStorage.getItem("token");
 
     axios
@@ -65,6 +80,8 @@ const Dashboard = () => {
       });
   };
 
+/* Getting the userID and token from local storage and setting the state of the component to the userID
+and token. */
   useEffect(() => {
     const userID = localStorage.getItem("userID");
     const token = localStorage.getItem("token");
